@@ -1,8 +1,12 @@
+import traceback
+
 from api.models import UserAccount
 from api.serializers import UserProfileSerializer
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class UserService:
@@ -54,3 +58,29 @@ class UserService:
                 {"message": f"An error occurred: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+    def get_auth_user(self, request):
+        try:
+           auth = JWTAuthentication()
+           auth_result =auth.authenticate(request)
+           
+           if auth_result is None:
+                return Response({"message": "no auth"}, status=status.HTTP_400_BAD_REQUEST)
+            
+           user, token = auth_result
+           try:
+               user_profile = UserAccount.objects.get(user=user)
+           except UserAccount.DoesNotExist:
+               return Response({
+                   "message": 'user does not exist'
+               }, status=status.HTTP_404_NOT_FOUND)
+           
+           profile = UserProfileSerializer(user_profile)
+           return Response({
+                'message': "User profile retrieved successfully",
+                'profile': profile.data
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            error_trace = traceback.format_exc() 
+            print(error_trace) 
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
