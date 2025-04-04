@@ -58,6 +58,26 @@ class UserService:
                 {"message": f"An error occurred: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+            
+    def list_users(self, request):
+        try:
+            users = UserAccount.objects.all()
+            user_data = []
+            for user in users:
+                user_data.append({
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "other_names": user.other_names
+                })
+            return Response({
+                'data': user_data
+            })
+                
+        except Exception as e:
+            return Response(
+                {"message": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     def get_auth_user(self, request):
         try:

@@ -15,3 +15,8 @@ def create_user(request):
 @permission_classes([IsAuthenticated])
 def get_user(request):
     return UserService().get_auth_user(request)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_users(request):
+    return UserService().list_users(request)
