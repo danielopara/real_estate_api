@@ -13,7 +13,7 @@ class UserAccount(models.Model):
     last_name = models.CharField(max_length=255, blank=False)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=False)
     dob = models.DateField(blank=False, null=False)
-    other = models.CharField(max_length=255)
+    other_names = models.CharField(max_length=255)
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -22,6 +22,8 @@ class UserAccount(models.Model):
         db_column='user_username'
     )
 
+    def __str__(self):
+        return f"{self.first_name} {self.other_names} {self.last_name}" 
 
 # Create your models here.
 class Property(models.Model):

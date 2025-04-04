@@ -30,11 +30,10 @@ class UserService:
 
             user = User.objects.create_user(username=email, email=email, password=password)
 
-            if user:
+            if user is not None:
                 user_profile = UserAccount.objects.create(
                     first_name=first_name,
                     last_name=last_name,
-                    email=email,
                     dob=dob,
                     other_names=other_names,
                     gender=gender,
