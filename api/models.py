@@ -1,4 +1,5 @@
 import uuid
+from tabnanny import verbose
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -21,6 +22,10 @@ class UserAccount(models.Model):
         to_field='username',
         db_column='user_username'
     )
+    
+    class Meta:
+        verbose_name = "User Account"
+        verbose_name_plural = "User Accounts"
 
     def __str__(self):
         return f"{self.first_name} {self.other_names} {self.last_name}" 
@@ -33,6 +38,10 @@ class Property(models.Model):
     city = models.CharField(max_length=50, blank=False)
     address = models.CharField(max_length=250, blank=False)
     owner = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="owner")
+    
+    class Meta:
+        verbose_name = "Property"
+        verbose_name_plural = "Properties"
     
     def __str__(self):
         return f"{self.name} - {self.owner.first_name} {self.owner.last_name}"
