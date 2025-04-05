@@ -12,6 +12,7 @@ class PropertyService():
             name = request.data.get('name')
             state = request.data.get('state')
             city = request.data.get('city')
+            apartments = request.data.get('apartments')
             address = request.data.get('address')
             
             if Property.objects.filter(address=address).exists():
@@ -26,6 +27,7 @@ class PropertyService():
                 state=state,
                 city=city,
                 address=address,
+                apartments=apartments,
                 owner=user
             )
             property_data = PropertySerializer(property)
@@ -33,6 +35,41 @@ class PropertyService():
                 {'message': "property created successfully", 'property': property_data.data},
                 status=status.HTTP_201_CREATED
             )
+        except Exception as e:
+            return Response(
+                {"message": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+    
+    def get_all_properties(self, request):
+        try:
+            properties = Property.objects.all()
+            serializer = PropertySerializer(properties, many=True)
+            return Response({
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"message": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+    
+    def get_property(self, request):
+        try:
+            property_id = request.GET.get('property_id')
+            
+            try:
+                property = Property.objects.get(id=property_id)
+            except Property.DoesNotExist:
+                return Response(
+                    {'message': "property not found"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            serializer = PropertySerializer(property)
+            return Response({
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
                 {"message": f"An error occurred: {str(e)}"},
