@@ -33,3 +33,6 @@ class Property(models.Model):
     city = models.CharField(max_length=50, blank=False)
     address = models.CharField(max_length=250, blank=False)
     owner = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="owner")
+    
+    def __str__(self):
+        return f"{self.name} - {self.owner.first_name} {self.owner.last_name}"
