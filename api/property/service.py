@@ -1,6 +1,5 @@
 from api.models import Property, UserAccount
 from api.serializers import PropertySerializer
-from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
