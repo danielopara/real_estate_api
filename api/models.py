@@ -46,3 +46,19 @@ class Property(models.Model):
     
     def __str__(self):
         return f"{self.name} - {self.owner.first_name} {self.owner.last_name}"
+    
+class Apartment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    rooms = models.IntegerField(null=False, blank=False)
+    toilets = models.IntegerField(null=False, blank=False)
+    bathrooms = models.IntegerField(null=False, blank=False)
+    description = models.CharField(max_length=255)
+    apartment_number = models.IntegerField()
+    
+    class Meta:
+        verbose_name = "Apartment"
+        verbose_name_plural = "Apartments"
+        
+    def __str__(self):
+        return f"{self.property.name} - Apartment {self.apartment_number}"
