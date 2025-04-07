@@ -48,12 +48,18 @@ class Property(models.Model):
         return f"{self.name} - {self.owner.first_name} {self.owner.last_name}"
     
 class Apartment(models.Model):
+    RENT_STATUS_CHOICES = [
+        ('available', 'available'),
+        ('rented', 'rented'),
+        ('maintenance', 'under maintenance')
+    ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
     rooms = models.IntegerField(null=False, blank=False)
     toilets = models.IntegerField(null=False, blank=False)
     bathrooms = models.IntegerField(null=False, blank=False)
     description = models.CharField(max_length=255)
+    rent_status = models.CharField(max_length=20, choices=RENT_STATUS_CHOICES, default='available')
     apartment_number = models.IntegerField()
     
     class Meta:
